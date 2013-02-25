@@ -40,6 +40,7 @@ int main(int argc, char** argv){
       /* These options set a flag. */
       {"verbose", no_argument,       &verbose_flag, 1},
       {"brief",   no_argument,       &verbose_flag, 0},
+      {"help", no_argument, 0, 'h'},
       /* These options don't set a flag.
        * We distinguish them by their indices. */
       {"infile",  required_argument, 0, 'i'},
@@ -53,12 +54,24 @@ int main(int argc, char** argv){
     };
     /* getopt_long stores the option index here. */
     int option_index = 0;
-    c = getopt_long (argc, argv, "i:o:p:d:a:m:e:", long_options, &option_index);
+    c = getopt_long (argc, argv, "hi:o:p:d:a:m:e:", long_options, &option_index);
     /* Detect the end of the options. */
     if (c == -1)
       break;
     switch (c)
     {
+      case 'h':
+        printf("Options are hi:o:p:d:a:m:e:\n");
+        printf("Usage: \n");
+        printf("-h --help print out help information\n");
+        printf("-i --infile [string] the base id [required argument]\n");
+        printf("-o --outfile [string] the outfile name, if not set, output to screen\n");
+        printf("-p --colp [int] the colomn number for period\n");
+        printf("-d --coldsp [int] the colomn number for dsp\n");
+        printf("-a --ap [int] the aperture number to run the program\n");
+        printf("-m --pmax [int] the maximum number of peaks(reconstructed files)to merge \n");
+        printf("-e --ext [string] the externtion of file\n");
+        break;
       case 'i':
         ID = optarg;
         break;
