@@ -28,7 +28,7 @@ vector<string> split(const string &s, char delim) {
 int main(int argc, char** argv){
 /*parsing the command line*/
   char *outfile = NULL;
-  int index,verbose_flag,c,outflag=0;
+  int index,verbose_flag,c,outflag=0,harm_flag=1;
   int colp, coldsp,pmax=5,ap=0,np;
   string ID;
   string ext=".blsanal";
@@ -40,6 +40,7 @@ int main(int argc, char** argv){
       /* These options set a flag. */
       {"verbose", no_argument,       &verbose_flag, 1},
       {"brief",   no_argument,       &verbose_flag, 0},
+      {"noharm",   no_argument,       &harm_flag, 0},
       {"help", no_argument, 0, 'h'},
       /* These options don't set a flag.
        * We distinguish them by their indices. */
@@ -60,6 +61,15 @@ int main(int argc, char** argv){
       break;
     switch (c)
     {
+      case 0:
+      /* If this option set a flag, do nothing else now. */
+        if (long_options[option_index].flag != 0)
+          break;
+        printf ("option %s", long_options[option_index].name);
+        if (optarg)
+          printf (" with arg %s", optarg);                                    
+        printf ("\n");
+        break;
       case 'h':
         printf("Options are hi:o:p:d:a:m:e:\n");
         printf("Usage: \n");
@@ -71,6 +81,7 @@ int main(int argc, char** argv){
         printf("-a --ap [int] the aperture number to run the program\n");
         printf("-m --pmax [int] the maximum number of peaks(reconstructed files)to merge \n");
         printf("-e --ext [string] the externtion of file\n");
+        printf("--noharm [string] ignore the harmonic peaks\n");
         break;
       case 'i':
         ID = optarg;
@@ -130,6 +141,7 @@ int main(int argc, char** argv){
     Tree *root = new Tree();
     string line;
     vector <string> data;
+    //cout << harm_flag << endl;
     for (np=0;np<pmax;np++){
       sprintf(&infile[0],"%s.AP%d.P%d%s",ID.c_str(),ap,np,ext.c_str());
       //cout << &infile[0] << np << endl;
@@ -146,7 +158,7 @@ int main(int argc, char** argv){
          data = split(line,'\t'); 
          p = atof(data[colp].c_str());
          dsp = atof(data[coldsp].c_str());
-         Item *newitem = new Item(&line,p,dsp);
+         Item *newitem = new Item(&line,p,dsp,harm_flag);
          Tree *node = new Tree(newitem);
          root->Insert(*node);
          delete node;

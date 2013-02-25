@@ -52,7 +52,7 @@ void Tree::InorderPrint(vector <string> &outstr){
       //cout << outstr.size() << endl;
       left->InorderPrint(outstr);
       item_->PrintState(outstr);
-      cout << outstr.size()<< "in tree" << endl;
+//      cout << outstr.size()<< "in tree" << endl;
       right->InorderPrint(outstr);
   }
 }
