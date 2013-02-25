@@ -159,7 +159,7 @@ int main(int argc, char** argv){
     if(outflag){
       vector <string> outstr(1,"#merged files"); 
       root->InorderPrint(outstr); 
-      cout << outstr.size() << endl;
+      //cout << outstr.size() << endl;
       out.open(outfile);
       for (unsigned int i=0; i<outstr.size();i++){
         out<<outstr[i]<<"\n";

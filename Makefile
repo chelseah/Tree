@@ -18,6 +18,7 @@ clean:
 	$(RM) *.o
 	$(RM) .depend
 	$(RM) testopt
+	$(RM) *.out
 depend:
 	    $(CXX) -MM $(CXXFLAGS) *.cpp > .depend
 
