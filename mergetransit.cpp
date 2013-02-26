@@ -84,6 +84,7 @@ int main(int argc, char** argv){
         printf("-e --ext [string] the externtion of file\n");
         printf("--noharm ignore the harmonic peaks\n");
         printf("--noorigin do not record the orgin of the peaks\n");
+        return 0;
         break;
       case 'i':
         ID = optarg;
@@ -130,10 +131,16 @@ int main(int argc, char** argv){
         abort();
     }
   }
-  //cout<<ID<<outfile<<ap<<pmax<<ext<<endl;
+  // cout<<ID<<outfile<<ap<<pmax<<ext<<endl;
   //printf ("aflag = %d, bflag = %d, cvalue = %s\n",aflag, bflag, cvalue);
-    for (index = optind; index < argc; index++)
+    for (index = optind; index < argc; index++){
       printf ("Non-option argument %s\n", argv[index]);
+      return 1;
+    }
+    if(ID.empty()){
+      cout << "--infile [-i] is required for sorttransit\n";
+      return 1;
+    }
     ifstream in;
     ofstream out;
     if (!(outfile==NULL)) outflag=1;
