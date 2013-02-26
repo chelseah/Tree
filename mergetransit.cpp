@@ -28,7 +28,7 @@ vector<string> split(const string &s, char delim) {
 int main(int argc, char** argv){
 /*parsing the command line*/
   char *outfile = NULL;
-  int index,verbose_flag,c,outflag=0,harm_flag=1;
+  int index,verbose_flag,c,outflag=0,harm_flag=1,orig_flag=1;
   int colp, coldsp,pmax=5,ap=0,np;
   string ID;
   string ext=".blsanal";
@@ -41,6 +41,7 @@ int main(int argc, char** argv){
       {"verbose", no_argument,       &verbose_flag, 1},
       {"brief",   no_argument,       &verbose_flag, 0},
       {"noharm",   no_argument,       &harm_flag, 0},
+      {"noorigin",   no_argument,       &orig_flag, 0},
       {"help", no_argument, 0, 'h'},
       /* These options don't set a flag.
        * We distinguish them by their indices. */
@@ -81,7 +82,8 @@ int main(int argc, char** argv){
         printf("-a --ap [int] the aperture number to run the program\n");
         printf("-m --pmax [int] the maximum number of peaks(reconstructed files)to merge \n");
         printf("-e --ext [string] the externtion of file\n");
-        printf("--noharm [string] ignore the harmonic peaks\n");
+        printf("--noharm ignore the harmonic peaks\n");
+        printf("--noorigin do not record the orgin of the peaks\n");
         break;
       case 'i':
         ID = optarg;
@@ -136,12 +138,30 @@ int main(int argc, char** argv){
     ofstream out;
     if (!(outfile==NULL)) outflag=1;
     double p,dsp;
-    string infile;
+    double *parr = new double [pmax];
+    string infile,line;
     Item *item;
     Tree *root = new Tree();
-    string line;
     vector <string> data;
     //cout << harm_flag << endl;
+    if(!orig_flag){
+      delete [] parr;
+    } else {
+      ifstream oin;
+      string oinfile;
+      sprintf(&oinfile[0],"%s%s",ID.c_str(),ext.c_str());
+      oin.open(&oinfile[0]);
+      np=0;
+      while(!oin.eof() and np<pmax){      
+        getline(oin,line);
+        if(line.compare(0,1,"#") and !line.empty()){
+         data = split(line,'\t'); 
+         parr[np] = atof(data[colp].c_str());
+         np++;
+        }
+      }
+      oin.close();
+    }
     for (np=0;np<pmax;np++){
       sprintf(&infile[0],"%s.AP%d.P%d%s",ID.c_str(),ap,np,ext.c_str());
       //cout << &infile[0] << np << endl;
@@ -158,6 +178,13 @@ int main(int argc, char** argv){
          data = split(line,'\t'); 
          p = atof(data[colp].c_str());
          dsp = atof(data[coldsp].c_str());
+         if(orig_flag){
+           string pstr;
+           sprintf(&pstr[0],"%15.7f",parr[np]);
+           line.append(&pstr[0]);
+           //cout << parr[np] << pstr[0] << endl;
+           //cout << line << endl;
+         }
          Item *newitem = new Item(&line,p,dsp,harm_flag);
          Tree *node = new Tree(newitem);
          root->Insert(*node);
@@ -167,6 +194,9 @@ int main(int argc, char** argv){
         if(!in) break;
       }
       in.close();
+    }
+    if(orig_flag){
+      delete [] parr;
     }
     if(outflag){
       vector <string> outstr(1,"#merged files"); 
