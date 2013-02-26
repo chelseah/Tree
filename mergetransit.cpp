@@ -150,7 +150,6 @@ int main(int argc, char** argv){
     Item *item;
     Tree *root = new Tree();
     vector <string> data;
-    //cout << harm_flag << endl;
     if(!orig_flag){
       delete [] parr;
     } else {
@@ -170,13 +169,14 @@ int main(int argc, char** argv){
       oin.close();
     }
     for (np=0;np<pmax;np++){
+      infile = string();
       sprintf(&infile[0],"%s.AP%d.P%d%s",ID.c_str(),ap,np,ext.c_str());
-      //cout << &infile[0] << np << endl;
       //infile << ID << ".AP" << ap << ".P" << np << ".blsanal"; 
       //in.open("HAT-317-0002127.AP0.P0.blsanal");
       //in.open("HAT-317-0002127.AP0.P0.blsanal");
       in.open(&infile[0]);
       if(!in){
+       cout << "input file not exits" << endl;
        exit(1);
       }
       while(!in.eof()){

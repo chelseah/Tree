@@ -3,7 +3,7 @@ import os
 import numpy as np
 import scipy as sp
 import math
-from dataio import *
+#from dataio import *
 """
 This is a wrapper for sorttransit so that it 
 run on a list of file
@@ -27,14 +27,18 @@ def main():
         names = []; readcolumn(names,1,inlist,datformat='str')
         for x in names:
             if(fileexists(x,ap,maxp)):
-                blsanalf = ID+'.AP%d' % ap + '.P%d' % (pmax-1)+ '.blsanal' 
-                blspsotf = os.path.splitext(blsanalf)[0]+'.blspost'
-                mergyf = os.path.splitext(blsanalf)[0]+'.blsall'
-                os.system("paste %s %s | cut -f 1-31,36- > %s " % (blsanalf,blspostf,mergyf))
+                for np in xrange(maxp):
+                    blsanalf = x+'.AP%d' % ap + '.P%d' % np+ '.blsanal' 
+                    blspostf = os.path.splitext(blsanalf)[0]+'.blspost'
+                    mergyf = os.path.splitext(blsanalf)[0]+'.blsall'
+                    os.system("paste %s %s | cut -f 1-31,36- > %s " % (blsanalf,blspostf,mergyf))
 
                 outfile = x+'.mergy.blsanal'
-                os.system("sorttransit -i %s -o %s -p %d -d %d -a %d -m %d --noharm -e %s" % (x, outfile, colp,coldsp,ap,maxp,'.blsall'))
-                os.remove(mergyf)
+                os.system("./sorttransit -i %s -o %s -p %d -d %d -a %d -m %d -e %s --noharm" % (x, outfile, colp,coldsp,ap,maxp,'.blsall'))
+   #             print "./../sorttransit -i %s -o %s -p %d -d %d -a %d -m %d -e %s --noharm" % (x, outfile, colp,coldsp,ap,maxp,'.blsall')
+                for np in xrange(maxp):
+                    mergyf = x+'.AP%d' % ap + '.P%d' % np + '.blsall'
+                    os.remove(mergyf)
     return
 if __name__=='__main__':
     main()
