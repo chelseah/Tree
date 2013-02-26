@@ -156,7 +156,7 @@ int main(int argc, char** argv){
     } else {
       ifstream oin;
       string oinfile;
-      sprintf(&oinfile[0],"%s%s",ID.c_str(),ext.c_str());
+      sprintf(&oinfile[0],"%s.blsanal",ID.c_str());
       oin.open(&oinfile[0]);
       np=0;
       while(!oin.eof() and np<pmax){      
