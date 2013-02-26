@@ -180,9 +180,9 @@ int main(int argc, char** argv){
          dsp = atof(data[coldsp].c_str());
          if(orig_flag){
            string pstr;
-           sprintf(&pstr[0],"%15.7f",parr[np]);
+           sprintf(&pstr[0],"%5d%15.7f",np,parr[np]);
            line.append(&pstr[0]);
-           //cout << parr[np] << pstr[0] << endl;
+           //cout << &pstr[0] << endl;
            //cout << line << endl;
          }
          Item *newitem = new Item(&line,p,dsp,harm_flag);
